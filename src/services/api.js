@@ -18,15 +18,15 @@ export const api = {
         return apiClient.get(`/hello`)
     },
     getTasks() {
-        return apiClient.get(API_URL)
+        return apiClient.get('')
     },
     addTask(description) {
-        return apiClient.post(API_URL, {description})
+        return apiClient.post('', {description})
     },
     completeTask(id) {
-        return apiClient.put(`${API_URL}/${id}/complete`)
+        return apiClient.put(`/${id}/complete`)
     },
     deleteTask(id) {
-        return apiClient.delete(`${API_URL}/${id}`)
+        return apiClient.delete(`/${id}`)
     }
 }

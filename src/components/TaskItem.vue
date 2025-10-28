@@ -1,26 +1,31 @@
 <template>
-    <li class="task-item">
-        <span :class="{ done: task.state === 'terminé' }">{{ task.description }}</span>
-        <div>
-            <button v-if="task.state !== 'terminé'" @click="$emit('complete', task.id)">Terminer</button>
-            <button @click="$emit('delete', task.id)">Supprimer</button>
-        </div>
-    </li>
+  <li class="task-item">
+    <span :style="{ textDecoration: task.state === 'terminé' ? 'line-through' : 'none' }">
+      {{ task.description }} ({{ task.state }})
+    </span>
+    <button @click="$emit('complete')" :disabled="task.state === 'terminé'">Terminer</button>
+    <button @click="$emit('delete')">Supprimer</button>
+  </li>
 </template>
 
-<script setup>
-defineProps({ task: Object });
+<script>
+export default {
+  name: 'TaskItem',
+  props: {
+    task: {
+      type: Object,
+      required: true
+    }
+  }
+}
 </script>
 
 <style scoped>
 .task-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 6px 0;
+  margin-bottom: 0.5rem;
 }
-.done {
-    text-decoration: line-through;
-    color: gray;
+.task-item button {
+  margin-left: 0.5rem;
+  cursor: pointer;
 }
 </style>

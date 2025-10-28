@@ -1,70 +1,110 @@
 <template>
-    <div class="task-manager">
-        <h2>Mes tâches</h2>
+  <div>
+    <h2>Liste des tâches</h2>
 
-        <form @submit.prevent="addNewTask">
-            <input v-model="newTask" placeholder="Nouvelle tâche" required />
-            <button type="submit">Ajouter</button>
-        </form>
-
-        <ul v-if="tasks.length">
-            <TaskItem
-                v-for="task in tasks"
-                :key="task.id"
-                :task="task"
-                @complete="markAsComplete"
-                @delete="deleteTask"
-            />
-        </ul/
-        <p v-else>Aucune tâche enregistrée.</p>
+    <!-- Formulaire d'ajout -->
+    <div class="add-task">
+      <input
+        v-model="newTaskDescription"
+        placeholder="Nouvelle tâche"
+        @keyup.enter="addTask"
+      />
+      <button @click="addTask">Ajouter</button>
     </div>
+
+    <!-- Liste des tâches -->
+    <ul>
+      <TaskItem
+        v-for="task in tasks"
+        :key="task.id"
+        :task="task"
+        @complete="completeTask(task.id)"
+        @delete="deleteTask(task.id)"
+      />
+    </ul>
+
+    <!-- Message si pas de tâches -->
+    <p v-if="tasks.length === 0">Aucune tâche pour le moment.</p>
+  </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue';
-import TaskItem from './TaskItem.vue';
-import { api } from '@/services/api.js';
+<script>
+import { ref, onMounted } from 'vue'
+import { api } from '@/services/api.js'
+import TaskItem from './TaskItem.vue'
 
-const tasks = ref([]);
-const newTask = ref('');
+export default {
+  name: 'TaskManager',
+  components: { TaskItem },
+  setup() {
+    const tasks = ref([])
+    const newTaskDescription = ref('')
 
-async function fetchTasks() {
-    const response = await api.getTasks();
-    tasks.value = response.data;
+    // Récupérer toutes les tâches
+    const fetchTasks = async () => {
+      try {
+        const response = await api.getTasks()
+        tasks.value = response.data
+        console.log('Tâches récupérées :', tasks.value) // <-- vérifie
+      } catch (error) {
+        console.error('Erreur lors de la récupération des tâches :', error)
+      }
+    }
+
+    // Ajouter une nouvelle tâche
+    const addTask = async () => {
+      if (!newTaskDescription.value.trim()) return
+      try {
+        const response = await api.addTask(newTaskDescription.value)
+        tasks.value.push(response.data) // ajoute la nouvelle tâche
+        newTaskDescription.value = '' // vide le champ
+      } catch (error) {
+        console.error('Erreur lors de l\'ajout de la tâche :', error)
+      }
+    }
+
+    // Marquer une tâche comme terminée
+    const completeTask = async (id) => {
+      try {
+        await api.completeTask(id)
+        await fetchTasks() // rafraîchit la liste
+      } catch (error) {
+        console.error('Erreur lors de la complétion de la tâche :', error)
+      }
+    }
+
+    // Supprimer une tâche
+    const deleteTask = async (id) => {
+      try {
+        await api.deleteTask(id)
+        tasks.value = tasks.value.filter(t => t.id !== id)
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la tâche :', error)
+      }
+    }
+
+    onMounted(fetchTasks)
+
+    return { tasks, newTaskDescription, addTask, completeTask, deleteTask }
+  }
 }
-
-async function addNewTask() {
-    if (!newTask.value.trim()) return;
-    await api.addTask(newTask.value);
-    newTask.value = '';
-    await fetchTasks();
-}
-
-async function markAsComplete(id) {
-    await api.completeTask(id);
-    await fetchTasks;
-}
-
-async function deleteTask(id) {
-    await api.deleteTask(id);
-    await fetchTasks();
-}
-
-onMounted(fetchTasks);
 </script>
 
 <style scoped>
-.task-manager {
-    max-width: 500px;
-    margin: 20px auto;
+.add-task {
+  margin-bottom: 1rem;
 }
-form {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+.add-task input {
+  padding: 0.5rem;
+  width: 200px;
+  margin-right: 0.5rem;
+}
+.add-task button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
 }
 ul {
-    list-style: none;
-    paddding: 0;
+  list-style-type: none;
+  padding: 0;
 }
 </style>
