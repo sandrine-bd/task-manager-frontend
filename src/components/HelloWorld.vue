@@ -5,14 +5,18 @@ import {onMounted, ref} from 'vue'
 const title = ref("")
 
 onMounted(async () => {
-    const response = await api.getHello()
-    title.value = ref(response.data)
+    try {
+        const response = await api.getHello()
+        title.value = ref(response.data)
+    } catch (e) {
+        title.value = "Erreur de chargement";
+    }
 })
 
 </script>
 
 <template>
-    <p>{{ title }}</p>
+    <p id="hello-message">{{ title }}</p>
 </template>
 
 <style scoped></style>
