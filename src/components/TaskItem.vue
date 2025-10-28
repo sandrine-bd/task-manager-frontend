@@ -1,6 +1,6 @@
 <template>
   <li class="task-item">
-    <span :style="{ textDecoration: task.state === 'terminé' ? 'line-through' : 'none' }">
+    <span :class="{ done: task.state === 'terminé' }" :style="{ textDecoration: task.state === 'terminé' ? 'line-through' : 'none' }">
       {{ task.description }} ({{ task.state }})
     </span>
     <button @click="$emit('complete')" :disabled="task.state === 'terminé'">Terminer</button>
@@ -27,5 +27,9 @@ export default {
 .task-item button {
   margin-left: 0.5rem;
   cursor: pointer;
+}
+.done {
+  text-decoration: line-through;
+  color: gray;
 }
 </style>

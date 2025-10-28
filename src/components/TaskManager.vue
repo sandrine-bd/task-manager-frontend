@@ -78,6 +78,7 @@ export default {
       try {
         await api.deleteTask(id)
         tasks.value = tasks.value.filter(t => t.id !== id)
+        if (task) task.state = 'terminé'
       } catch (error) {
         console.error('Erreur lors de la suppression de la tâche :', error)
       }

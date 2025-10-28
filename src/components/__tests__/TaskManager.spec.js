@@ -68,7 +68,7 @@ describe('TaskManager.vue - Cas nominaux', () => {
         expect(api.completeTask).toHaveBeenCalledWith('1')
     })
 
-    it("supprimer une tâche et appelle l'API correspondante", async () => {
+    it("supprime une tâche et appelle l'API correspondante", async () => {
         api.deleteTask.mockResolvedValue({})
         const task = { id: '2', description: 'Réviser', state: 'en cours' }
 
