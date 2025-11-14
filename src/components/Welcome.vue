@@ -16,7 +16,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <p id="hello-message">{{ title }}</p>
+    <p id="welcome-page">{{ title }}</p>
 </template>
 
 <style scoped></style>

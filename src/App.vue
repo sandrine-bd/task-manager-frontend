@@ -1,12 +1,12 @@
 <script setup>
-    import HelloWorld from './components/HelloWorld.vue';
-    import TaskManager from './components/TaskManager.vue';
+import Welcome from './components/Welcome.vue'
+import TaskManager from './components/TaskManager.vue'
 </script>
 
 <template>
     <main>
-        <h1>Task Manager</h1>
-        <HelloWorld/>
+        <h1>Vehicle Booking website</h1>
+        <Welcome />
 
         <TaskManager />
     </main>

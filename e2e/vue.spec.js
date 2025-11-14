@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 // https://playwright.dev/docs/intro
 test('visits the app root url', async ({ page }) => {
   await page.goto('/');
-  await expect(page.locator('h1')).toHaveText('Task Manager');
-  await expect(page.locator('#hello-message')).toHaveText('Welcome to the Task Manager API!')
+  await expect(page.locator('h1')).toHaveText('Vehicle Booking');
+  await expect(page.locator('#welcome-page')).toHaveText("Welcome to the Vehicle Booking website!")
   // https://playwright.dev/docs/input
 })
